@@ -1,0 +1,13 @@
+#define GROUP_PIN(g, p)     ((g << 16) | (p))
+
+/ {
+    100ask_led@0 {
+        compatible = "100ask, led_drv";
+        pin = <GROUP_PIN(5, 3)>;
+    };
+
+    100ask_led@1 {
+        compatible = "100ask, led_drv";
+        pin = <GROUP_PIN(5, 4)>;
+    };
+};
