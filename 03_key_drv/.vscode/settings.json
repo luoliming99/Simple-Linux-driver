@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "key_drv.h": "c",
+        "plat_key_dev.h": "c"
+    }
+}

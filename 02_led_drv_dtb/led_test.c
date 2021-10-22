@@ -6,8 +6,8 @@
 #include <stdio.h>
 
 /**
- * ./led_test /dev/myled ON
- * ./led_test /dev/myled OFF
+ * ./led_test <dev> ON
+ * ./led_test <dev> OFF
  */
 int main (int argc, char **argv)
 {
