@@ -40,7 +40,7 @@ static int led_gpio_init (int which)
             __FILE__, __FUNCTION__, __LINE__, which, group, pin);
 
     /* 获取LED引脚的寄存器信息 */
-    if (group == 5) {
+    if (group == 5 && pin == 3) {
         led_regs.IOMUXC = ioremap(0x2290014, 4);
     }
     led_regs.GPIOx_DR   = ioremap(GPIO_GROUP(group) + 0x0, 4);
