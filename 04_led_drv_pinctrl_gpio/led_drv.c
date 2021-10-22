@@ -49,8 +49,8 @@ static int plat_led_drv_probe (struct platform_device *pdev)
 {
     printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);
 
-    /* 从设备树中获取名为"led"的引脚GPIO信息（设备树中定义有：led-gpios = <...>;） */
-    led_gpio = gpiod_get(&pdev->dev, "led", 0);
+    /* 从设备树中获取名为"led0"的引脚GPIO信息 */
+    led_gpio = gpiod_get(&pdev->dev, "led0", 0);
     if (IS_ERR(led_gpio)) {
         dev_err(&pdev->dev, "Failed to get GPIO for led");
         return PTR_ERR(led_gpio);

@@ -1,0 +1,21 @@
+/ {
+    user-leds {
+        compatible = "100ask, led_drv";
+        pinctrl-names = "default";                  /* 定义了1种状态：default */
+        pinctrl-0 = <&pinctrl_leds>;                /* 第0种状态的引脚在 pinctrl_leds 中定义 */        
+        led0-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;    /* led0-gpios 名字为 led0，还可添加 led1-gpios, led2-gpios, ... */
+    };
+}
+
+&iomuxc_snvs {
+    pinctrl-names = "default_snvs";
+    pinctrl-0 = <&pinctrl_hog_2>;
+
+    imx6ul-evk {
+        pinctrl_leds: ledgrp {
+            fsl,pins = <
+                  MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03        0x000110A0
+            >;
+        };
+    }
+}
