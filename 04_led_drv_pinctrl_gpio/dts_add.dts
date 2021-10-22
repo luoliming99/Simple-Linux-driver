@@ -1,0 +1,21 @@
+/ {
+    100ask_led@0 {
+        compatible = "100ask, led_drv";
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_led_test>;
+        led-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+    };
+}
+
+&iomuxc_snvs {
+    pinctrl-names = "default_snvs";
+    pinctrl-0 = <&pinctrl_hog_2>;
+
+    imx6ul-evk {
+        pinctrl_led_test: pinctrl_led_test {        /*!< Function assigned for the core: Cortex-A7[ca7] */
+                fsl,pins = <
+                    MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03        0x000110A0
+                >;
+        };
+    }
+}

@@ -60,7 +60,7 @@ static ssize_t led_write (struct file *file, const char __user *buf, size_t size
     /* copy_from_user: get data from app */
     ret = copy_from_user(&status, buf, 1);
 
-    /* 根据此设备号和val控制LED */
+    /* 根据此设备号和status控制LED */
     p_led_oprs->set(minor, status);
 
     return 1;
