@@ -1,6 +1,4 @@
 #include <linux/module.h>
-#include <linux/device.h>
-#include <linux/tty.h>
 #include <asm/io.h>
 #include <linux/platform_device.h>
 

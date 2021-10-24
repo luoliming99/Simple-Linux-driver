@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "module.h": "c",
+        "tty.h": "c",
+        "ring_buf.h": "c"
+    }
+}
