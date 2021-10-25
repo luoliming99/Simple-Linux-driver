@@ -5,6 +5,8 @@
 #include <linux/slab.h>
 #include <linux/tty.h>
 #include <asm/io.h>
+#include <linux/poll.h>
+#include <linux/fcntl.h>
 
 #include "ring_buf.h" 
 
@@ -21,6 +23,8 @@ static int major;
 static struct class *key_class;
 
 static DECLARE_WAIT_QUEUE_HEAD(key_wait_q);
+
+static struct fasync_struct *key_fasync_s;
 
 /** 
  * 按键值环形缓存区，高8位存储引脚编号，低8位存储引脚逻辑值 
@@ -39,16 +43,37 @@ static ssize_t key_read (struct file *file, char __user *buf, size_t size, loff_
 {
     int ret, val;
 
-    wait_event_interruptible(key_wait_q, !rb_is_empty(&key_val_rb));
-    rb_recv(&key_val_rb, &val);
+    ret = rb_recv(&key_val_rb, &val);
+    if (ret != 0) {     /* 环形缓存区为空 */
+        return 0;
+    }
     ret = copy_to_user(buf, &val, 4);
 
-	return 4;
+    return 4;
+}
+
+static unsigned int key_poll (struct file *file, poll_table *wait)
+{
+    printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);
+    
+    poll_wait(file, &key_wait_q, wait); /* 在超时时间内休眠等待线程被唤醒 */
+    return rb_is_empty(&key_val_rb) ? 0 : POLLIN | POLLRDNORM;
+}
+
+static int key_fasync (int fd, struct file *file, int on)
+{
+    if (fasync_helper(fd, file, on, &key_fasync_s) >= 0) {
+        return 0;
+    } else {
+        return -EIO;
+    }
 }
 
 static struct file_operations key_fops = {
-    .owner = THIS_MODULE,
-    .read = key_read,
+    .owner  = THIS_MODULE,
+    .read   = key_read,
+    .poll   = key_poll,
+    .fasync = key_fasync,
 };
 
 
@@ -60,7 +85,8 @@ static irqreturn_t gpios_int_isr (int irq, void *dev_id)
     val = gpiod_get_value(gpio_int_info->gpiod); /* 获取gpio引脚逻辑值 */
     val = (gpio_int_info->pin << 8) | val;
     rb_send(&key_val_rb, val);
-    wake_up_interruptible(&key_wait_q);
+    wake_up_interruptible(&key_wait_q);         /* 唤醒等待队列中的线程 */
+    kill_fasync(&key_fasync_s, SIGIO, POLLIN);  /* 满足POLLIN条件时就发送SIGIO信号给应用程序 */
 
     printk("pin: %d, flag: %d, irq: %d, val: 0x%x\n",  
             gpio_int_info->pin, 

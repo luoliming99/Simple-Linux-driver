@@ -12,6 +12,7 @@ int main (int argc, char **argv)
 {
     int fd;
     int key_val;
+    int ret;
 
     /* 判断参数 */
     if (argc != 2) {
@@ -25,9 +26,14 @@ int main (int argc, char **argv)
         printf("can not open file %s\n", argv[1]);
     }
 
-    /* read */
-    read(fd, &key_val, 4);
-    printf("key_pin: %d, val: %d\n", key_val >> 8, key_val & 0xFF);
+    /* 将数据全部读完 */
+    while (1) {
+        ret = read(fd, &key_val, 4);
+        if (ret != 4) {
+            break;
+        }
+        printf("key_pin: %d, val: %d\n", key_val >> 8, key_val & 0xFF);
+    } 
    
     /* close */
     close(fd);

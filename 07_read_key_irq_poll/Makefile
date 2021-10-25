@@ -19,5 +19,5 @@ clean:
 # ab-y := a.o b.o(注意:ab的名字不能和a或b一样!)
 # obj-m += ab.o
 
-key_rb-y := key_drv.o ring_buf.o
-obj-m := key_rb.o
+key_irq_poll-y := key_drv.o ring_buf.o
+obj-m := key_irq_poll.o
