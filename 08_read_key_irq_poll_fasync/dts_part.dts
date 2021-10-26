@@ -1,0 +1,9 @@
+/ {
+    gpios-int {
+            compatible = "100ask, gpio_int";
+            pinctrl-names = "default";
+            gpios = <&gpio5 1  GPIO_ACTIVE_LOW
+                     &gpio4 14 GPIO_ACTIVE_LOW>;
+        };
+    }
+}
